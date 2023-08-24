@@ -4,15 +4,24 @@ import (
 	"log"
 	"time"
 
-	"github.com/kazuo278/action-dashboard/infrastruncture/database"
+	"github.com/kazuo278/action-dashboard/domain/model/github"
+	"github.com/kazuo278/action-dashboard/domain/service"
 	"github.com/kazuo278/action-dashboard/infrastruncture/restapi"
-	"github.com/kazuo278/action-dashboard/model/github"
 )
 
+type JobApplication struct {
+	jobRepository service.JobRepository
+}
+
+func NewJobAppication(jobRepositroy service.JobRepository) *JobApplication {
+	jobApplication := new(JobApplication)
+	return jobApplication
+}
+
 // Set Up Runnerフェーズで実行するロジック
-func SetUpRunner(repositoryId string, repositoryName string, runId string, workflowRef string, jobName string, runAttempt string) (*github.Job, error) {
+func (app JobApplication) SetUpRunner(repositoryId string, repositoryName string, runId string, workflowRef string, jobName string, runAttempt string) (*github.Job, error) {
 	// リポジトリを取得
-	repository := database.GetRepositoryById(repositoryId)
+	repository := app.jobRepository.GetRepositoryById(repositoryId)
 	// リポジトリが存在しない(新規Actions実行したリポジトリである)場合
 	if (*repository == github.Repository{}) {
 		// リポジトリテーブルに登録
@@ -20,10 +29,10 @@ func SetUpRunner(repositoryId string, repositoryName string, runId string, workf
 		repository := new(github.Repository)
 		repository.RepositoryId = repositoryId
 		repository.RepositoryName = repositoryName
-		database.CreateRepository(repository)
+		app.jobRepository.CreateRepository(repository)
 	}
 	// 現在実行中のジョブがdbに登録済みか調べる
-	currentJob := database.GetJobByIds(repositoryId, runId, jobName, runAttempt)
+	currentJob := app.jobRepository.GetJobByIds(repositoryId, runId, jobName, runAttempt)
 	// 未登録の場合、RunId、RunAttemptに紐づく全てのジョブをdbに登録する
 	if (*currentJob == github.Job{}) {
 		// ジョブリストの取得
@@ -48,27 +57,27 @@ func SetUpRunner(repositoryId string, repositoryName string, runId string, workf
 				// 現在実行中のジョブ以外は、Queuedステータスとしてdbに登録
 				job.Status = "QUEUED"
 			}
-			database.CreateJob(&job)
+			app.jobRepository.CreateJob(&job)
 		}
 	} else {
 		// 登録済みの場合
 		// 実行中のジョブを実行中ステータスに変更
 		currentJob.StartedAt = nowJST()
 		currentJob.Status = "STARTED"
-		database.UpdateJob(currentJob)
+		app.jobRepository.UpdateJob(currentJob)
 	}
 	return currentJob, nil
 }
 
 // Completed Runner フェーズで実行する関数
-func CompletedRunner(repositoryId string, runId string, jobName string, runAttempt string) *github.Job {
+func (app JobApplication) CompletedRunner(repositoryId string, runId string, jobName string, runAttempt string) *github.Job {
 	// 更新対象を取得
-	job := database.GetJobByIds(repositoryId, runId, jobName, runAttempt)
+	job := app.jobRepository.GetJobByIds(repositoryId, runId, jobName, runAttempt)
 	// ステータスを変更
 	job.FinishedAt = nowJST()
 	job.Status = "FINISHED"
 	// 更新
-	database.UpdateJob(job)
+	app.jobRepository.UpdateJob(job)
 	return job
 }
 

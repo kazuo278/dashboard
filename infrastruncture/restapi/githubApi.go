@@ -10,8 +10,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/kazuo278/action-dashboard/domain/model/github"
 	"github.com/kazuo278/action-dashboard/infrastruncture/restapi/dto"
-	"github.com/kazuo278/action-dashboard/model/github"
 )
 
 const baseUrl string = "https://api.github.com/"
@@ -21,8 +21,11 @@ const AcceptHeader string = "Accept"
 const accept string = "application/vnd.github+json"
 const AuthorizationHeader string = "Authorization"
 
+type GitHubJobAPI struct {
+}
+
 // ジョブIDリストの取得
-func GetJobList(runId string, repositoryName string, runAttempt string) (*[]github.Job, error) {
+func (api GitHubJobAPI) GetJobList(runId string, repositoryName string, runAttempt string) (*[]github.Job, error) {
 	// 参考：https://docs.github.com/ja/rest/actions/workflow-jobs?apiVersion=2022-11-28#list-jobs-for-a-workflow-run-attempt
 	// URI：https://api.github.com/repos/OWNER/REPO/actions/runs/RUN_ID/attempts/ATTEMPT_NUMBER/jobs
 	jobListEndpointUri := baseUrl + repositoryName + "/actions/runs/" + runId + "/attempts/" + runAttempt + "/jobs"
@@ -44,7 +47,7 @@ func GetJobList(runId string, repositoryName string, runAttempt string) (*[]gith
 	response, err := client.Do(request)
 	if err != nil {
 		log.Printf("Error: エンドポイント接続時にエラーが発生しました。%s", err)
-		return nil, fmt.Errorf("Error: エンドポイント接続時にエラーが発生しました: %w", err)
+		return nil, fmt.Errorf("error: エンドポイント接続時にエラーが発生しました: %w", err)
 	}
 
 	defer response.Body.Close()
@@ -86,7 +89,7 @@ func GetJob(jobId string, repositoryName string) (*github.Job, error) {
 	response, err := client.Do(request)
 	if err != nil {
 		log.Printf("Error: エンドポイント接続時にエラーが発生しました。%s", err)
-		return nil, fmt.Errorf("Error: エンドポイント接続時にエラーが発生しました: %w", err)
+		return nil, fmt.Errorf("error: エンドポイント接続時にエラーが発生しました: %w", err)
 	}
 
 	defer response.Body.Close()
@@ -129,7 +132,7 @@ func GetJobLog(jobId string, repositoryName string) (*[]byte, error) {
 	response, err := client.Do(request)
 	if err != nil {
 		log.Printf("Error: エンドポイント接続時にエラーが発生しました。%s", err)
-		return nil, fmt.Errorf("Error: エンドポイント接続時にエラーが発生しました: %w", err)
+		return nil, fmt.Errorf("error: エンドポイント接続時にエラーが発生しました: %w", err)
 	}
 
 	defer response.Body.Close()

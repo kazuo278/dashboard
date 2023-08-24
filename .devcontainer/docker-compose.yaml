@@ -1,0 +1,30 @@
+version: '3'
+services:
+  golang:
+    build:
+      context: ./golang
+    ports:
+      - 8080:8080
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    tty: true
+    volumes:
+      - ${HOME:-~}/.ssh:/root/.ssh
+      - ${HOME:-~}/.gitconfig:/root/.gitconfig
+      - ..:/workspace
+  postgres:
+    build: ./postgres
+    ports:
+      - 5432:5432
+    environment:
+      LANG: ja_JP.utf8
+      TZ: "Asia/Tokyo"
+      POSTGRES_DB: ${DBNAME}
+      POSTGRES_USER: ${USERNAME}
+      POSTGRES_PASSWORD: ${PASSWORD}
+  pgweb:
+    image: sosedoff/pgweb
+    ports:
+      - 8081:8081
+    environment:
+      PGWEB_DATABASE_URL: ${DATABASE_URL}

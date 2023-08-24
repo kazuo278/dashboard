@@ -5,9 +5,9 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/kazuo278/action-dashboard/domain/model/github"
 	"github.com/kazuo278/action-dashboard/infrastruncture/database"
 	"github.com/kazuo278/action-dashboard/infrastruncture/restapi"
-	"github.com/kazuo278/action-dashboard/model/github"
 )
 
 func Analysis(jobId string, repositoryId string) (*github.Job, *[]github.JobDetail, error) {

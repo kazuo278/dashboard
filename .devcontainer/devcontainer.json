@@ -1,0 +1,21 @@
+{
+    "name": "golang Remote-Container",
+    "dockerComposeFile": "docker-compose.yaml",
+    "service" : "golang",
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash",
+                "extensions": [
+                    "alefragnani.bookmarks",
+                    "mhutchie.git-graph",
+                    "oderwat.indent-rainbow",
+                    "shardulm94.trailing-spaces",
+                    "golang.go"
+                ]
+            }
+        }
+    },
+    "shutdownAction": "stopCompose"
+  }
