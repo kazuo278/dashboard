@@ -1,6 +1,6 @@
-package service
+package repository
 
-import "github.com/kazuo278/action-dashboard/domain/model/github"
+import "github.com/kazuo278/dashboard/domain/model/github"
 
 type JobRepository interface {
 	// RepositoryのID検索
@@ -13,4 +13,6 @@ type JobRepository interface {
 	CreateJob(job *github.Job) *github.Job
 	// ジョブの更新
 	UpdateJob(job *github.Job) *github.Job
+	// ジョブ詳細の登録
+	CreateJobDetail(jobDetail *github.JobDetail) *github.JobDetail
 }

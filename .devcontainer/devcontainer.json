@@ -6,16 +6,22 @@
     "customizations": {
         "vscode": {
             "settings": {
-                "terminal.integrated.shell.linux": "/bin/bash",
-                "extensions": [
-                    "alefragnani.bookmarks",
-                    "mhutchie.git-graph",
-                    "oderwat.indent-rainbow",
-                    "shardulm94.trailing-spaces",
-                    "golang.go"
-                ]
-            }
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "bash",
+                        "icon": "terminal-bash"
+                    }
+                },
+                "terminal.integrated.shell.linux": "bash"
+			},
+            "extensions": [
+                "alefragnani.bookmarks",
+                "mhutchie.git-graph",
+                "oderwat.indent-rainbow",
+                "shardulm94.trailing-spaces",
+                "golang.go"
+            ]
         }
     },
     "shutdownAction": "stopCompose"
-  }
+}

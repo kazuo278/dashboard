@@ -1,0 +1,36 @@
+.status-icon::before{
+  content: "";
+  border-radius: 9999px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  margin-right: 5px;
+}
+
+.status-icon.completed::before {
+  background-color: green;
+}
+
+.status-icon.queued::before {
+  background-color: orangered;
+  animation: flash 2s linear infinite;
+}
+
+.status-icon.started::before {
+  background-color: red;
+  animation: flash 2s linear infinite;
+}
+
+@keyframes flash {
+	0%,
+  50%,
+  75%,
+	100% {
+		opacity: 1;
+	}
+
+	25% {
+		opacity: 0;
+	}
+}

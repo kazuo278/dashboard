@@ -1,0 +1,25 @@
+name: Go package
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Build
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo
+
+      - name: Upload Application
+        uses: actions/upload-artifact@v3
+        with:
+          name: application
+          path: dashboard

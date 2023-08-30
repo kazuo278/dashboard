@@ -1,9 +1,9 @@
 package github
 
 type JobDetail struct {
-	JobDetailId         uint   `gorm:"primaryKey;column:job_detaild_id" json:"job_detaild_id"`
-	JobId               string `gorm:"column:job_id" json:"job_id"`
-	Type                string `gorm:"column:type" json:"type"`
-	UsingRepositoryName string `gorm:"column:using_repository_name" json:"using_repository_name"`
-	UsingRepositoryRef  string `gorm:"column:using_repository_ref" json:"using_repository_ref"`
+	JobDetailId uint   `gorm:"primaryKey;column:job_detail_id" json:"job_detail_id"`
+	JobId       string `gorm:"column:job_id" json:"job_id"`
+	Type        string `gorm:"column:type" json:"type"`
+	UsingPath   string `gorm:"column:using_path" json:"using_path"`
+	UsingRef    string `gorm:"column:using_ref" json:"using_ref"`
 }

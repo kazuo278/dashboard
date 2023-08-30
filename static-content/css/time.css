@@ -1,0 +1,27 @@
+.bar-background {
+  background-color: rgb(199, 199, 199);
+  height: 1.5em;
+  padding: 0;
+  position: relative;
+}
+
+.bar {
+  border-right: 2px solid;
+  border-color: #fff;
+  height: 1.5em;
+  position: absolute;
+  text-align: right;
+  padding-right: 5px;
+}
+
+.bar-blue{
+  background-color: rgb(0, 234, 255);
+}
+
+.bar-green {
+  background-color: rgb(3, 235, 153);
+}
+
+.bar-yellow {
+  background-color: rgb(255, 201, 5);
+}
