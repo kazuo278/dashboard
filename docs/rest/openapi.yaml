@@ -1,0 +1,474 @@
+openapi: 3.0.2
+info:
+  title: GitHub Actions History Management
+  description: |-
+    GitHub Actions Self-Hosted Runnerのジョブ実行前後に本APIを呼ぶことで実行履歴を登録・更新する。
+    保管された実行履歴を検索、集計(回数・時間)するAPIも備える
+  version: 1.0.0
+paths:
+  /actions:
+    get:
+      summary: 実行履歴検索
+      description: 実行履歴を検索する
+      parameters:
+        - name: limit
+          in: query
+          description: 最大取得件数 最大100件。101件以上が指定された場合は、100件にフォールバックされる。
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: 取得するレコードの先頭行番号
+          required: false
+          schema:
+            type: integer
+        - name: job_id
+          in: query
+          description: ジョブID
+          required: false
+          schema:
+            type: string
+        - name: repository_id
+          in: query
+          description: リポジトリID
+          required: false
+          schema:
+            type: string
+        - name: repository_name
+          in: query
+          description: リポジトリ名
+          required: false
+          schema:
+            type: string
+        - name: workflow_ref
+          in: query
+          description: ワークフローファイルのパスとref
+          required: false
+          schema:
+            type: string
+        - name: job_name
+          in: query
+          description: ジョブ名
+          required: false
+          schema:
+            type: string
+        - name: run_id
+          in: query
+          description: RunID
+          required: false
+          schema:
+            type: string
+        - name: run_attempt
+          in: query
+          description: 同一Run実行回数
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 実施ステータス。開始中:STARTED、完了:COMPLETED
+          required: false
+          schema:
+            type: string
+        - name: started_at
+          in: query
+          description: |-
+            開始日時。ISO 8601拡張形式 yyyy-MM-ddTHH:mm:ssXXX
+            開始日が指定した日時以降のジョブを検索する
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: finished_at
+          in: query
+          description: |-
+            終了日時。ISO 8601拡張形式 yyyy-MM-ddTHH:mm:ssXXX
+            終了日が指定した日時以前のジョブを検索する
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: 正常応答
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobResponse'
+  /actions/hisotry:
+    post:
+      summary: 実行履歴登録
+      description: 実行履歴をstatus=開始中で登録する
+      requestBody:
+        description: 実行履歴オブジェクト
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostHistory'
+        required: true
+      responses:
+        201:
+          description: 正常応答
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+    put:
+      summary: 実行履歴更新
+      description: 実行履歴をstatus=完了で更新する
+      requestBody:
+        description: 実行履歴オブジェクト
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutHistory'
+        required: true
+      responses:
+        200:
+          description: 正常応答
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+  /actions/count:
+    get:
+      summary: 実行回数検索
+      description: リポジトリに紐づく実行回数を検索する
+      parameters:
+        - name: repository_name
+          in: query
+          description: リポジトリ名
+          required: false
+          schema:
+            type: string
+        - name: started_at
+          in: query
+          description: |-
+            開始日時。ISO 8601拡張形式 yyyy-MM-ddTHH:mm:ssXXX
+            開始日が指定した日時以降のジョブを検索する
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: finished_at
+          in: query
+          description: |-
+            終了日時。ISO 8601拡張形式 yyyy-MM-ddTHH:mm:ssXXX
+            終了日が指定した日時以前のジョブを検索する
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: 正常応答
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistoryCountResponse'
+  /actions/time:
+    get:
+      summary: 実行時間検索
+      description: リポジトリに紐づく実行時間(s)を検索する
+      parameters:
+        - name: repository_name
+          in: query
+          description: リポジトリ名
+          required: false
+          schema:
+            type: string
+        - name: started_at
+          in: query
+          description: |-
+            開始日時。ISO 8601拡張形式 yyyy-MM-ddTHH:mm:ssXXX
+            開始日が指定した日時以降のジョブを検索する
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: finished_at
+          in: query
+          description: |-
+            終了日時。ISO 8601拡張形式 yyyy-MM-ddTHH:mm:ssXXX
+            終了日が指定した日時以前のジョブを検索する
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: 正常応答
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistoryTimeResponse'
+  /actions/runner/registration-token:
+    post:
+      summary: Runner登録トークン取得
+      description: Runner登録トークンを取得する
+      requestBody:
+        description: Runner登録トークン取得オブジェクト
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationTokenRequest'
+        required: true
+      responses:
+        201:
+          description: 正常応答
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationTokenResponse'
+  /details:
+    get:
+      summary: 実行詳細履歴検索
+      description: 実行詳細履歴を検索する
+      parameters:
+        - name: limit
+          in: query
+          description: 最大取得件数 最大100件。101件以上が指定された場合は、100件にフォールバックされる。
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: 取得するレコードの先頭行番号
+          required: false
+          schema:
+            type: integer
+        - name: job_id
+          in: query
+          description: ジョブID
+          required: false
+          schema:
+            type: string
+        - name: repository_id
+          in: query
+          description: リポジトリID
+          required: false
+          schema:
+            type: string
+        - name: repository_name
+          in: query
+          description: リポジトリ名
+          required: false
+          schema:
+            type: string
+        - name: using_path
+          in: query
+          description: 利用するAction,Reusable Workflowのパス
+          required: false
+          schema:
+            type: string
+        - name: using_ref
+          in: query
+          description: 利用するAction,Reusable WorkflowのRef
+          required: false
+          schema:
+            type: string
+        - name: job_name
+          in: query
+          description: ジョブ名
+          required: false
+          schema:
+            type: string
+        - name: run_id
+          in: query
+          description: RunID
+          required: false
+          schema:
+            type: string
+        - name: run_attempt
+          in: query
+          description: 同一Run実行回数
+          required: false
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: 詳細種別。Action:ACTION,ReusableWorkflow:REUSABLE_WORKFLOW
+          required: false
+          schema:
+            type: string
+        - name: started_at
+          in: query
+          description: |-
+            開始日時。ISO 8601拡張形式 yyyy-MM-ddTHH:mm:ssXXX
+            開始日が指定した日時以降のジョブを検索する
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: finished_at
+          in: query
+          description: |-
+            終了日時。ISO 8601拡張形式 yyyy-MM-ddTHH:mm:ssXXX
+            終了日が指定した日時以前のジョブを検索する
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: 正常応答
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DetailResponse'
+components:
+  schemas:
+    Job:
+      type: object
+      properties:
+        job_id:
+          type: string
+        repository_id:
+          type: string
+        repository_name:
+          type: string
+        run_id:
+          type: string
+        workflow_ref:
+          type: string
+        job_name:
+          type: string
+        run_attempt:
+          type: string
+        status:
+          type: string
+        started_at:
+          type: string
+          format: date-time
+        finished_at:
+          type: string
+          format: date-time
+    Detail:
+      type: object
+      properties:
+        job_detail_id:
+          type: integer
+        job_id:
+          type: string
+        repository_id:
+          type: string
+        repository_name:
+          type: string
+        run_id:
+          type: string
+        job_name:
+          type: string
+        run_attempt:
+          type: string
+        type:
+          type: string
+        using_path:
+          type: string
+        using_ref:
+          type: string
+        started_at:
+          type: string
+          format: date-time
+        finished_at:
+          type: string
+          format: date-time
+    JobResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+        histories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Job'
+    DetailResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/Detail'
+    PostHistory:
+      type: object
+      properties:
+        repository_id:
+          type: string
+        repository_name:
+          type: string
+        run_id:
+          type: string
+        workflow_ref:
+          type: string
+        job_name:
+          type: string
+        run_attempt:
+          type: string
+    PutHistory:
+      type: object
+      properties:
+        repository_id:
+          type: string
+        run_id:
+          type: string
+        job_name:
+          type: string
+        run_attempt:
+          type: string
+    HistoryCount:
+      type: object
+      properties:
+        repository_name:
+          type: string
+        count:
+          type: integer
+    HistoryCountResponse:
+      type: object
+      properties:
+        counts:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryCount'
+    HistoryTime:
+      type: object
+      properties:
+        repository_name:
+          type: string
+        seconds:
+          type: integer
+    HistoryTimeResponse:
+      type: object
+      properties:
+        times:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryTime'
+    RegistrationTokenRequest:
+      type: object
+      properties:
+        organization_name:
+          type: string
+        organization_key:
+          type: string
+    RegistrationTokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        expires_at:
+          type: string
+          format: date-time

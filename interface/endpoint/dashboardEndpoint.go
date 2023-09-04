@@ -100,7 +100,7 @@ func (endpoint *dashboardEndpointImpl) GetJobTime(c echo.Context) error {
 //	job_id=<string>
 //	repository_id=<string>
 //	repository_name=<string>
-//	using_name=<string>
+//	using_path=<string>
 //	using_ref=<string>
 //	job_name=<string>
 //	run_id=<string>
