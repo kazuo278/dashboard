@@ -39,7 +39,10 @@ Self-Hosted Runnerで実行されるジョブと紐づくActionやReusableWorkfl
     EOM
     ```
 
-## 操作方法
+## 開発方法
+
+- 事前準備  
+  `.devcontainer/organization-token.txt`にAction実行履歴を取得したいリポジトリ閲覧権限をもったトークンを記載する。
 
 - 開発モード起動
 
