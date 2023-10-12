@@ -76,6 +76,17 @@ let createRequestUri = () => {
   return uri;
 }
 
+// 検索条件をクリアする関数
+let clear = () => {
+  document.getElementById("repository_name").value = "";
+  document.getElementById("workflow_ref").value = "";
+  document.getElementById("job_name").value = "";
+  document.getElementById("started_at").value = null;
+  document.getElementById("finished_at").value = null;
+  document.getElementById("status").value = "ALL";
+  document.getElementById("conclusion").value = "";
+}
+
 // 単一のテーブルカラムの表示を制御する関数
 let updateColumnDisplay = (idName) => {
   if (document.getElementById(CHEKC_PREFIX + idName).checked) {
@@ -163,6 +174,7 @@ let displayRedcords = (records) => {
     var aRunId = document.createElement("a");
     aRunId.href = "https://github.com/" + record.repository_name + "/actions/runs/" + record.run_id;
     aRunId.text = record.run_id;
+    aRunId.target = '_blank';
     tdRunId.appendChild(aRunId)
     tr.appendChild(tdRunId);
 
@@ -172,6 +184,7 @@ let displayRedcords = (records) => {
     var aRunAttempt = document.createElement("a");
     aRunAttempt.href = "https://github.com/" + record.repository_name + "/actions/runs/" + record.run_id + "/attempts/" + record.run_attempt;
     aRunAttempt.text = record.run_attempt;
+    aRunAttempt.target = '_blank';
     tdRunAttempt.appendChild(aRunAttempt)
     tr.appendChild(tdRunAttempt);
 
@@ -181,6 +194,7 @@ let displayRedcords = (records) => {
     var aRepoName = document.createElement("a");
     aRepoName.href = "https://github.com/" + record.repository_name;
     aRepoName.text = record.repository_name;
+    aRepoName.target = '_blank';
     tdRepoName.appendChild(aRepoName)
     tr.appendChild(tdRepoName);
 
@@ -355,7 +369,9 @@ let initDashboard = () => {
   searchButton = document.getElementById("search_button");
   searchButton.addEventListener('click', search);
   searchButton.addEventListener('click', initCurrentPageNum);
-
+  // クリアボタン押下時に検索条件をクリア
+  clearButton = document.getElementById("clear_button");
+  clearButton.addEventListener('click', clear);
   // カラム表示制御チェックボックスに表示制御関数を登録
   columnIdList.forEach(idName => {
     document.getElementById(CHEKC_PREFIX + idName).addEventListener('change', {

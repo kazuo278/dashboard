@@ -107,6 +107,21 @@ let createRequestUri = () => {
   return uri;
 }
 
+// 検索条件をクリアする関数
+let clear = () => {
+  document.getElementById("job_id").value = "";
+  document.getElementById("run_id").value = "";
+  document.getElementById("run_attempt").value = "";
+  document.getElementById("repository_name").value = "";
+  document.getElementById("job_name").value = "";
+  document.getElementById("using_path").value = "";
+  document.getElementById("using_ref").value = "";
+  document.getElementById("started_at").value = null;
+  document.getElementById("finished_at").value = null;
+  document.getElementById("type").value = "ALL";
+}
+
+
 // 単一のテーブルカラムの表示を制御する関数
 let updateColumnDisplay = (idName) => {
   if (document.getElementById(CHEKC_PREFIX + idName).checked) {
@@ -169,6 +184,7 @@ let displayRedcords = (records) => {
     var aRunId = document.createElement("a");
     aRunId.href = "https://github.com/" + record.repository_name + "/actions/runs/" + record.run_id;
     aRunId.text = record.run_id;
+    aRunId.target = '_blank';
     tdRunId.appendChild(aRunId)
     tr.appendChild(tdRunId);
 
@@ -178,6 +194,7 @@ let displayRedcords = (records) => {
     var aRunAttempt = document.createElement("a");
     aRunAttempt.href = "https://github.com/" + record.repository_name + "/actions/runs/" + record.run_id + "/attempts/" + record.run_attempt;
     aRunAttempt.text = record.run_attempt;
+    aRunAttempt.target = '_blank';
     tdRunAttempt.appendChild(aRunAttempt)
     tr.appendChild(tdRunAttempt);
 
@@ -187,36 +204,43 @@ let displayRedcords = (records) => {
     var aRepoName = document.createElement("a");
     aRepoName.href = "https://github.com/" + record.repository_name;
     aRepoName.text = record.repository_name;
+    aRepoName.target = '_blank';
     tdRepoName.appendChild(aRepoName)
     tr.appendChild(tdRepoName);
 
     // JOB名
     var tdJobName = document.createElement("td");
     tdJobName.textContent = record.job_name;
+    tdJobName.classList.add("job-name");
     tr.appendChild(tdJobName);
 
     // Type
     var tdType = document.createElement("td");
+    tdType.classList.add("type");
     tdType.appendChild(formatStatus(record.type));
     tr.appendChild(tdType);
 
     // 利用Path
     var tdUsingPath = document.createElement("td");
+    tdUsingPath.classList.add("using-path");
     tdUsingPath.textContent = record.using_path;
     tr.appendChild(tdUsingPath);
 
     // 利用Ref
     var tdUsingRef = document.createElement("td");
+    tdUsingRef.classList.add("using-ref");
     tdUsingRef.textContent = record.using_ref;
     tr.appendChild(tdUsingRef);
 
     // 開始日時
     var tdStartedAt = document.createElement("td");
+    tdStartedAt.classList.add("started-at");
     tdStartedAt.textContent = formatDate(record.started_at);
     tr.appendChild(tdStartedAt);
 
     // 終了日時
     var tdFinishedAt = document.createElement("td");
+    tdFinishedAt.classList.add("finished-at");
     tdFinishedAt.textContent = formatDate(record.finished_at);
     tr.appendChild(tdFinishedAt);
 
@@ -364,7 +388,9 @@ let initDashboard = () => {
   searchButton = document.getElementById("search_button");
   searchButton.addEventListener('click', search);
   searchButton.addEventListener('click', initCurrentPageNum);
-
+  // クリアボタン押下時に検索条件をクリア
+  clearButton = document.getElementById("clear_button");
+  clearButton.addEventListener('click', clear);
   // カラム表示制御チェックボックスに表示制御関数を登録
   columnIdList.forEach(idName => {
     document.getElementById(CHEKC_PREFIX + idName).addEventListener('change', {

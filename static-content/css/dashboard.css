@@ -71,6 +71,10 @@
   min-width: 150px;
 }
 
+#result_table_box {
+  overflow-x: scroll !important;
+}
+
 @keyframes flash {
 	0%,
   50%,

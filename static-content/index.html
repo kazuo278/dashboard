@@ -79,6 +79,7 @@
           </div>
           <div class="col-12">
             <button id="search_button" type="submit" class="btn btn-primary">検索</button>
+            <button id="clear_button" type="submit" class="btn btn-secondary">クリア</button>
           </div>
         </div>
       </div>
@@ -155,12 +156,12 @@
       </div>
     </div>
   </div>
-  <div id="result_box" class="p-3">
+  <div id="result_box"  class="container-fluid mt-3 px-5">
     <p>実行履歴</p>
     <div id="total_records" class="mx-3 mb-3">
       <!-- 全件数を動的に埋め込む -->
     </div>
-    <div id="result_table_box" class="row m-3 overflow-scroll">
+    <div id="result_table_box" class="row m-3">
       <table id="result_table" class="table table-sm">
         <thead>
           <tr>

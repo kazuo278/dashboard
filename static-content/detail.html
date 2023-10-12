@@ -90,6 +90,7 @@
           </div>
           <div class="col-12">
             <button id="search_button" type="submit" class="btn btn-primary">検索</button>
+            <button id="clear_button" type="submit" class="btn btn-secondary">クリア</button>
           </div>
         </div>
       </div>
@@ -97,61 +98,61 @@
         <p>表示項目</p>
         <div id="display_check" class="border py-1 px-3">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="check-job-id" >
+            <input class="form-check-input" type="checkbox" value="" id="check-job-id" checked>
             <label class="form-check-label" for="check-job-id">
               ジョブID
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="check-run-id" >
+            <input class="form-check-input" type="checkbox" value="" id="check-run-id" checked>
             <label class="form-check-label" for="check-run-id">
               RUN ID
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="check-run-attempt">
+            <input class="form-check-input" type="checkbox" value="" id="check-run-attempt" checked>
             <label class="form-check-label" for="check-run-attempt">
               実行数
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="check-repository-name" >
+            <input class="form-check-input" type="checkbox" value="" id="check-repository-name" checked>
             <label class="form-check-label" for="check-repository-name">
               リポジトリ名
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="check-job-name">
+            <input class="form-check-input" type="checkbox" value="" id="check-job-name" checked>
             <label class="form-check-label" for="check-job-name">
               Job名
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="check-type" >
+            <input class="form-check-input" type="checkbox" value="" id="check-type" checked>
             <label class="form-check-label" for="check-type">
               タイプ
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="check-using-path" >
+            <input class="form-check-input" type="checkbox" value="" id="check-using-path" checked>
             <label class="form-check-label" for="check-using-path">
               利用リソース
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="check-using-ref" >
+            <input class="form-check-input" type="checkbox" value="" id="check-using-ref" checked>
             <label class="form-check-label" for="check-using-ref">
               利用Ref
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="check-started-at" >
+            <input class="form-check-input" type="checkbox" value="" id="check-started-at">
             <label class="form-check-label" for="check-started-at">
               開始日時
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="check-finished-at" >
+            <input class="form-check-input" type="checkbox" value="" id="check-finished-at">
             <label class="form-check-label" for="check-finished-at">
               終了日時
             </label>
@@ -159,46 +160,47 @@
         </div>
       </div>
     </div>
-    <div id="result_box" class="p-3">
-      <p>実行履歴</p>
-      <div id="total_records" class="mx-3 mb-3">
-        <!-- 全件数を動的に埋め込む -->
-      </div>
-      <div id="result_table_box" class="row m-3">
-        <table id="result_table" class="table table-sm">
-          <thead>
-            <tr>
-              <th scope="col" class="job-id">ジョブID</th>
-              <th scope="col" class="run-id">RUN ID</th>
-              <th scope="col" class="run-attempt">実行数</th>
-              <th scope="col" class="repository-name">リポジトリ名</th>
-              <th scope="col" class="job-name">JOB名</th>
-              <th scope="col" class="type">Type</th>
-              <th scope="col" class="using_path">利用リソース</th>
-              <th scope="col" class="using_ref">利用Ref</th>
-              <th scope="col" class="started-at">開始日時</th>
-              <th scope="col" class="finished-at">終了日時</th>
-            </tr>
-          </thead>
-          <tbody id="table_body">
-            <!-- 検索結果を動的に埋め込む -->
-          </tbody>
-        </table>
-      </div>
-      <nav aria-label="Page navigation">
-        <ul id="page_list" class="pagination pagination-sm justify-content-center">
-          <!-- ページネーターを動的に埋め込む -->
-        </ul>
-      </nav>
+  </div>
+
+  <div id="result_box" class="container-fluid mt-3 px-5">
+    <p>実行履歴</p>
+    <div id="total_records" class="mx-3 mb-3">
+      <!-- 全件数を動的に埋め込む -->
     </div>
-    <!-- 通知用トースト -->
-    <div id="toast" class="toast align-items-center position-fixed top-0 end-0" role="alert" aria-live="assertive"
-      aria-atomic="true">
-      <div class="d-flex">
-        <div id="toast_body" class="toast-body">
-        </div>
-        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    <div id="result_table_box" class="row m-3">
+      <table id="result_table" class="table table-sm">
+        <thead>
+          <tr>
+            <th scope="col" class="job-id" >ジョブID</th>
+            <th scope="col" class="run-id" >RUN ID</th>
+            <th scope="col" class="run-attempt" >実行数</th>
+            <th scope="col" class="repository-name">リポジトリ名</th>
+            <th scope="col" class="job-name">JOB名</th>
+            <th scope="col" class="type" >Type</th>
+            <th scope="col" class="using-path" >利用リソース</th>
+            <th scope="col" class="using-ref" >利用Ref</th>
+            <th scope="col" class="started-at" >開始日時</th>
+            <th scope="col" class="finished-at" >終了日時</th>
+          </tr>
+        </thead>
+        <tbody id="table_body">
+          <!-- 検索結果を動的に埋め込む -->
+        </tbody>
+      </table>
+    </div>
+    <nav aria-label="Page navigation">
+      <ul id="page_list" class="pagination pagination-sm justify-content-center">
+        <!-- ページネーターを動的に埋め込む -->
+      </ul>
+    </nav>
+  </div>
+  <!-- 通知用トースト -->
+  <div id="toast" class="toast align-items-center position-fixed top-0 end-0" role="alert" aria-live="assertive"
+    aria-atomic="true">
+    <div class="d-flex">
+      <div id="toast_body" class="toast-body">
       </div>
+      <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
   </div>
 </body>
