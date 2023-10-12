@@ -39,7 +39,7 @@ func NewDashboardRepository() repository.DashboardRepository {
 func (repo dashboardRepositoryImpl) GetJobs(
 	limit int, offset int, jobId string, repositoryId string, repositoryName string,
 	workflowRef string, jobName string, runId string, runAttempt string, status string,
-	startedAt string, finishedAt string) (*[]dto.RepoJob, int) {
+	conclusion string, startedAt string, finishedAt string) (*[]dto.RepoJob, int) {
 	result := []dto.RepoJob{}
 	count := 0
 	sql := repo.db.Table("jobs").Select("jobs.*, repositories.repository_name").Joins("left join repositories on repositories.repository_id = jobs.repository_id")
@@ -83,6 +83,11 @@ func (repo dashboardRepositoryImpl) GetJobs(
 	if status != "" {
 		sql.Where("status = ?", status)
 		countSql.Where("status = ?", status)
+	}
+
+	if conclusion != "" {
+		sql.Where("conclusion = ?", conclusion)
+		countSql.Where("conclusion = ?", conclusion)
 	}
 
 	if startedAt != "" {

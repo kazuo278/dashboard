@@ -7,3 +7,8 @@ type JobDetail struct {
 	UsingPath   string `gorm:"column:using_path" json:"using_path"`
 	UsingRef    string `gorm:"column:using_ref" json:"using_ref"`
 }
+
+const (
+	TYPE_REUSABLE_WORKFLOW = "REUSABLE_WORKFLOW"
+	TYPE_ACTION            = "ACTION"
+)

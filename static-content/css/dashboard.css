@@ -17,9 +17,58 @@
   animation: flash 2s linear infinite;
 }
 
-.status-icon.started::before {
+.status-icon.in-progress::before {
   background-color: red;
   animation: flash 2s linear infinite;
+}
+
+#display_check .form-check {
+  min-height: unset;
+  margin-bottom: unset;
+}
+
+.job-id {
+  min-width: 100px;
+}
+
+.repository-id {
+  min-width: 100px;
+}
+
+.run-id {
+  min-width: 100px;
+}
+
+.run-attempt {
+  min-width: 60px;
+}
+
+.repository-name {
+  min-width: 150px;
+}
+
+.workflow-ref {
+  min-width: 300px;
+}
+
+.job-name {
+  min-width: 100px;
+}
+
+.status {
+  min-width: 100px;
+}
+
+.conclusion {
+  min-width: 100px;
+}
+
+.started-at {
+  min-width: 150px;
+}
+
+.finished-at {
+  min-width: 150px;
 }
 
 @keyframes flash {

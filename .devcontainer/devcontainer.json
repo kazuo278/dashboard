@@ -15,12 +15,13 @@
                 "terminal.integrated.shell.linux": "bash"
 			},
             "extensions": [
-                "alefragnani.bookmarks",
-                "mhutchie.git-graph",
-                "oderwat.indent-rainbow",
-                "shardulm94.trailing-spaces",
-                "golang.go"
-            ]
+				"alefragnani.bookmarks",
+				"mhutchie.git-graph",
+				"oderwat.indent-rainbow",
+				"shardulm94.trailing-spaces",
+				"golang.go",
+				"42Crunch.vscode-openapi"
+			]
         }
     },
     "shutdownAction": "stopCompose"

@@ -200,6 +200,10 @@ func getOrganizationToken() (string, error) {
 }
 
 // dto.JobのJobIDフィールドをgitHub.Jobにコピーする
+// ただし、以下の属性はAPIの結果に含まれないため入らない
+// ・RunAttempt
+// ・RepositoryId
+// ・WorkflowRef
 func convertGitHubJobListToJobList(githubJobList *[]dto.GitHubJob) *[]github.Job {
 	jobList := []github.Job{}
 	for _, githubJob := range *githubJobList {
@@ -209,6 +213,9 @@ func convertGitHubJobListToJobList(githubJobList *[]dto.GitHubJob) *[]github.Job
 		job.RunId = strconv.Itoa(githubJob.RunId)
 		job.JobName = githubJob.JobName
 		job.Status = strings.ToUpper(githubJob.Status)
+		job.Conclusion = strings.ToUpper(githubJob.Conclusion)
+		job.StartedAt = githubJob.StartedAt
+		job.FinishedAt = githubJob.CompletedAt
 		jobList = append(jobList, *job)
 	}
 	return &jobList

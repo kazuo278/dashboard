@@ -17,7 +17,6 @@ func main() {
 	jobApi := restapi.NewGitHubJobApi()
 	// アプリケーション層の初期化
 	jobApp := application.NewJobAppication(jobRepository, jobApi)
-	jobAnalyzerApp := application.NewJobAnalyzerAppication(jobRepository, jobApi)
 	dashboardApp := application.NewDashboardApplication(dashboardRepository)
 	// インターフェース層の初期化
 	e := echo.New()
@@ -25,7 +24,7 @@ func main() {
 	e.Use(middleware.Recover())
 	// REST API
 	// 更新系API
-	jobEndpoint := endpoint.NewJobEndpoint(jobApp, jobAnalyzerApp)
+	jobEndpoint := endpoint.NewJobEndpoint(jobApp)
 	e.POST("/actions/history", jobEndpoint.PostJob)
 	e.PUT("/actions/history", jobEndpoint.PutJob)
 	// 参照系API

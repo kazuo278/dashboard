@@ -13,6 +13,7 @@ type RepoJob struct {
 	JobName        string     `gorm:"primaryKey;column:job_name" json:"job_name"`
 	RunAttempt     string     `gorm:"primaryKey;column:run_attempt" json:"run_attempt"`
 	Status         string     `gorm:"column:status" json:"status"`
+	Conclusion     string     `gorm:"column:conclusion" json:"conclusion"`
 	StartedAt      *time.Time `gorm:"column:started_at" json:"started_at"`
 	FinishedAt     *time.Time `gorm:"column:finished_at" json:"finished_at"`
 }

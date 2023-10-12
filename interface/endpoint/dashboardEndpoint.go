@@ -40,6 +40,7 @@ func NewDashboardEndpoint(app application.DashboardApplication) DashboardEndpoin
 //	run_id=<string>
 //	run_attempt=<string>
 //	status=<string>
+//	conclusion=<string>
 //	started_at=<string>
 //	finished_at=<string>
 func (endpoint *dashboardEndpointImpl) GetJobs(c echo.Context) error {
@@ -51,7 +52,7 @@ func (endpoint *dashboardEndpointImpl) GetJobs(c echo.Context) error {
 	if err != nil || offsetNum == 0 {
 		offsetNum = 0
 	}
-	jobs, count := endpoint.dashboardApp.GetJobs(limitNum, offsetNum, c.FormValue("job_id"), c.QueryParam("repository_id"), c.QueryParam("repository_name"), c.QueryParam("workflow_ref"), c.QueryParam("job_name"), c.QueryParam("run_id"), c.QueryParam("run_attempt"), c.QueryParam("status"), c.QueryParam("started_at"), c.QueryParam("finished_at"))
+	jobs, count := endpoint.dashboardApp.GetJobs(limitNum, offsetNum, c.FormValue("job_id"), c.QueryParam("repository_id"), c.QueryParam("repository_name"), c.QueryParam("workflow_ref"), c.QueryParam("job_name"), c.QueryParam("run_id"), c.QueryParam("run_attempt"), c.QueryParam("status"), c.QueryParam("conclusion"), c.QueryParam("started_at"), c.QueryParam("finished_at"))
 
 	result := new(dto.GetJobsResponse)
 	result.Jobs = jobs

@@ -49,6 +49,13 @@ func (repo *jobRepositoryImpl) CreateRepository(repository *github.Repository) *
 	return repository
 }
 
+// ID検索
+func (repo *jobRepositoryImpl) GetJobById(jobId string) *github.Job {
+	result := github.Job{}
+	repo.db.Where("job_id = ?", jobId).Limit(1).Find(&result)
+	return &result
+}
+
 // ID代替の複数条件によるジョブの１件取得
 func (repo *jobRepositoryImpl) GetJobByIds(repositoryId string, runId string, jobName string, runAttempt string) *github.Job {
 	result := github.Job{}

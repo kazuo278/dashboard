@@ -15,14 +15,12 @@ type JobEndpoint interface {
 }
 
 type jobEndpointImpl struct {
-	jobApp         application.JobApplication
-	jobAnalyzerApp application.JobAnalyzerApplication
+	jobApp application.JobApplication
 }
 
-func NewJobEndpoint(jobApp application.JobApplication, jobAnalyzerApp application.JobAnalyzerApplication) JobEndpoint {
+func NewJobEndpoint(jobApp application.JobApplication) JobEndpoint {
 	jobEndpoint := new(jobEndpointImpl)
 	jobEndpoint.jobApp = jobApp
-	jobEndpoint.jobAnalyzerApp = jobAnalyzerApp
 	return jobEndpoint
 }
 
@@ -43,7 +41,7 @@ func (endpoint *jobEndpointImpl) PostJob(c echo.Context) error {
 	body := dto.PostJobRequest{}
 	c.Bind(&body)
 	// 実行履歴を登録
-	result, err := endpoint.jobApp.SetUpRunner(body.RepositoryId, body.RepositoryName, body.RunId, body.WorkflowRef, body.JobName, body.RunAttempt)
+	err := endpoint.jobApp.SetUpRunner(body.RepositoryId, body.RepositoryName, body.RunId, body.WorkflowRef, body.JobName, body.RunAttempt)
 	// 登録失敗エラーハンドリング
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
@@ -53,7 +51,7 @@ func (endpoint *jobEndpointImpl) PostJob(c echo.Context) error {
 	// ブラウザ更新処理を非同期呼び出し
 	go websocket.Update()
 
-	return c.JSON(http.StatusCreated, result)
+	return c.JSON(http.StatusNoContent, nil)
 }
 
 // 実行履歴を更新する
@@ -70,13 +68,15 @@ func (endpoint *jobEndpointImpl) PutJob(c echo.Context) error {
 	// JSONリクエストを取得
 	body := dto.PutJobRequest{}
 	c.Bind(&body)
-	// 実行履歴を更新
-	result := endpoint.jobApp.CompletedRunner(body.RepositoryId, body.RunId, body.JobName, body.RunAttempt)
-	// 解析処理を非同期呼び出し
-	go endpoint.jobAnalyzerApp.Analyze(result.JobId, result.RepositoryId)
+	// 実行履歴とジョブ解析を実行
+	err := endpoint.jobApp.CompletedRunner(body.RepositoryId, body.RunId, body.JobName, body.RunAttempt)
+	// 登録失敗エラーハンドリング
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
 	// WebSocketを確立したブラウザへ更新を通知
 	websocket := websocket.NewDashboardWebSocket()
 	// ブラウザ更新処理を非同期呼び出し
 	go websocket.Update()
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusNoContent, nil)
 }

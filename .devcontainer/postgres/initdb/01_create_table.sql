@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS "jobs" (
   "job_name" varchar(100) NOT NULL,
   "run_attempt" varchar(10) NOT NULL,
   "status" varchar(15) NOT NULL,
+  "conclusion" varchar(15),
   "started_at" timestamp WITH TIME ZONE,
   "finished_at" timestamp WITH TIME ZONE,
   PRIMARY KEY("job_id")

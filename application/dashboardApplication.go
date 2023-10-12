@@ -6,7 +6,7 @@ import (
 )
 
 type DashboardApplication interface {
-	GetJobs(limit int, offset int, jobId string, repositoryId string, repositoryName string, workflowRef string, jobName string, runId string, runAttempt string, status string, startedAt string, finishedAt string) (*[]dto.RepoJob, int)
+	GetJobs(limit int, offset int, jobId string, repositoryId string, repositoryName string, workflowRef string, jobName string, runId string, runAttempt string, status string, conclusion string, startedAt string, finishedAt string) (*[]dto.RepoJob, int)
 	GetJobCount(repositoryName string, startedAt string, finishedAt string) (*[]dto.RepoCount, int)
 	GetJobTime(repositoryName string, startedAt string, finishedAt string) (*[]dto.RepoTime, int)
 	GetJobDetails(limit int, offset int, jobId string, repositoryId string, repositoryName string, usingPath string, usingRef string, jobName string, runId string, runAttempt string, typeName string, startedAt string, finishedAt string) (*[]dto.RepoJobDetail, int)
@@ -23,8 +23,8 @@ func NewDashboardApplication(dashboardRepository repository.DashboardRepository)
 }
 
 // 実行履歴を取得する
-func (app dashboardApplicationImpl) GetJobs(limit int, offset int, jobId string, repositoryId string, repositoryName string, workflowRef string, jobName string, runId string, runAttempt string, status string, startedAt string, finishedAt string) (*[]dto.RepoJob, int) {
-	jobs, count := app.repository.GetJobs(limit, offset, jobId, repositoryId, repositoryName, workflowRef, jobName, runId, runAttempt, status, startedAt, finishedAt)
+func (app dashboardApplicationImpl) GetJobs(limit int, offset int, jobId string, repositoryId string, repositoryName string, workflowRef string, jobName string, runId string, runAttempt string, status string, conclusion string, startedAt string, finishedAt string) (*[]dto.RepoJob, int) {
+	jobs, count := app.repository.GetJobs(limit, offset, jobId, repositoryId, repositoryName, workflowRef, jobName, runId, runAttempt, status, conclusion, startedAt, finishedAt)
 	return jobs, count
 }
 

@@ -3,7 +3,23 @@ let currentPageNum = 1;
 // 合計ページ数
 let totalPageNum = 1;
 // 1ページあたりの表示数
-let pageSize = 10;
+const pageSize = 10;
+
+// カラム表示制御チェックボックスのIDプリフィックス
+const CHEKC_PREFIX = "check-"
+// カラムIDリスト
+const columnIdList = [
+  "job-id",
+  "run-id",
+  "run-attempt",
+  "repository-name",
+  "job-name",
+  "type",
+  "using-path",
+  "using-ref",
+  "started-at",
+  "finished-at"
+];
 
 // URLから検索初期値を設定
 let url = new URL(window.location.href);
@@ -91,6 +107,15 @@ let createRequestUri = () => {
   return uri;
 }
 
+// 単一のテーブルカラムの表示を制御する関数
+let updateColumnDisplay = (idName) => {
+  if (document.getElementById(CHEKC_PREFIX + idName).checked) {
+    Array.from(document.getElementsByClassName(idName)).forEach(function (x) { x.style.display = '' });
+  } else {
+    Array.from(document.getElementsByClassName(idName)).forEach(function (x) { x.style.display = 'none' });
+  }
+}
+
 // 日付変換する関数
 let formatDate = (dateStr) => {
   if (!dateStr) {
@@ -125,46 +150,71 @@ let displayRedcords = (records) => {
     var tr = document.createElement("tr");
     // Job ID
     var tdJobId = document.createElement("td");
-    // 表示しないが詳細表示したくなった時のため値は保持しておく
-    tdJobId.classList.add("d-none");
-    tdJobId.textContent = record.job_id;
+    tdJobId.classList.add("job-id");
+    // 詳細取得リンクを作成
+    var aJobId = document.createElement("a");
+    var uriJobId = window.location.protocol + "//" + window.location.host + "/dashboard/detail.html"
+    var paramsJobId = new URLSearchParams();
+    paramsJobId.append("job_id", record.job_id);
+    paramsJobId.append("run_id", record.run_id);
+    paramsJobId.append("run_attempt", record.run_attempt);
+    aJobId.href = uriJobId + "?" + new URLSearchParams(paramsJobId).toString();
+    aJobId.text = record.job_id;
+    tdJobId.appendChild(aJobId);
     tr.appendChild(tdJobId);
+
     // RUN　ID
     var tdRunId = document.createElement("td");
-    tdRunId.textContent = record.run_id;
-    // 表示しないが詳細表示したくなった時のため値は保持しておく
-    tdRunId.classList.add("d-none");
+    tdRunId.classList.add("run-id");
+    var aRunId = document.createElement("a");
+    aRunId.href = "https://github.com/" + record.repository_name + "/actions/runs/" + record.run_id;
+    aRunId.text = record.run_id;
+    tdRunId.appendChild(aRunId)
     tr.appendChild(tdRunId);
+
     // RUN ATTEMPT
     var tdRunAttempt = document.createElement("td");
-    tdRunAttempt.textContent = record.run_attempt;
-    // 表示しないが詳細表示したくなった時のため値は保持しておく
-    tdRunAttempt.classList.add("d-none");
+    tdRunAttempt.classList.add("run-attempt");
+    var aRunAttempt = document.createElement("a");
+    aRunAttempt.href = "https://github.com/" + record.repository_name + "/actions/runs/" + record.run_id + "/attempts/" + record.run_attempt;
+    aRunAttempt.text = record.run_attempt;
+    tdRunAttempt.appendChild(aRunAttempt)
     tr.appendChild(tdRunAttempt);
+
     // リポジトリ名
     var tdRepoName = document.createElement("td");
-    tdRepoName.textContent = record.repository_name;
+    tdRepoName.classList.add("repository-name");
+    var aRepoName = document.createElement("a");
+    aRepoName.href = "https://github.com/" + record.repository_name;
+    aRepoName.text = record.repository_name;
+    tdRepoName.appendChild(aRepoName)
     tr.appendChild(tdRepoName);
+
     // JOB名
     var tdJobName = document.createElement("td");
     tdJobName.textContent = record.job_name;
     tr.appendChild(tdJobName);
+
     // Type
     var tdType = document.createElement("td");
     tdType.appendChild(formatStatus(record.type));
     tr.appendChild(tdType);
+
     // 利用Path
     var tdUsingPath = document.createElement("td");
     tdUsingPath.textContent = record.using_path;
     tr.appendChild(tdUsingPath);
+
     // 利用Ref
     var tdUsingRef = document.createElement("td");
     tdUsingRef.textContent = record.using_ref;
     tr.appendChild(tdUsingRef);
+
     // 開始日時
     var tdStartedAt = document.createElement("td");
     tdStartedAt.textContent = formatDate(record.started_at);
     tr.appendChild(tdStartedAt);
+
     // 終了日時
     var tdFinishedAt = document.createElement("td");
     tdFinishedAt.textContent = formatDate(record.finished_at);
@@ -172,6 +222,8 @@ let displayRedcords = (records) => {
 
     tbody.appendChild(tr);
   });
+  // カラム表示項目の初期化
+  columnIdList.forEach(idName => updateColumnDisplay(idName));
 }
 
 // ページネーターを作成する関数
@@ -312,10 +364,21 @@ let initDashboard = () => {
   searchButton = document.getElementById("search_button");
   searchButton.addEventListener('click', search);
   searchButton.addEventListener('click', initCurrentPageNum);
+
+  // カラム表示制御チェックボックスに表示制御関数を登録
+  columnIdList.forEach(idName => {
+    document.getElementById(CHEKC_PREFIX + idName).addEventListener('change', {
+      arg: idName,
+      handleEvent: function () { updateColumnDisplay(this.arg) }
+    });
+  });
+
   // 実行履歴更新時に検索実行
   document.addEventListener('history_update', search);
   // 初期化処理
   search();
+  // カラム表示項目の初期化
+  columnIdList.forEach(idName => updateColumnDisplay(idName));
 }
 
 // イベントに対応する処理の追加

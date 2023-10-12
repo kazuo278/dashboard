@@ -67,7 +67,13 @@ paths:
             type: string
         - name: status
           in: query
-          description: 実施ステータス。開始中:STARTED、完了:COMPLETED
+          description: 実施ステータス。実行前:QUEUED、実行中:IN_PROGRESS、完了:COMPLETED
+          required: false
+          schema:
+            type: string
+        - name: conclusion
+          in: query
+          description: 結果ステータス
           required: false
           schema:
             type: string
@@ -110,14 +116,8 @@ paths:
               $ref: '#/components/schemas/PostHistory'
         required: true
       responses:
-        201:
+        204:
           description: 正常応答
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Job'
     put:
       summary: 実行履歴更新
       description: 実行履歴をstatus=完了で更新する
@@ -129,14 +129,8 @@ paths:
               $ref: '#/components/schemas/PutHistory'
         required: true
       responses:
-        200:
+        204:
           description: 正常応答
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Job'
   /actions/count:
     get:
       summary: 実行回数検索
@@ -213,24 +207,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/HistoryTimeResponse'
-  /actions/runner/registration-token:
-    post:
-      summary: Runner登録トークン取得
-      description: Runner登録トークンを取得する
-      requestBody:
-        description: Runner登録トークン取得オブジェクト
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RegistrationTokenRequest'
-        required: true
-      responses:
-        201:
-          description: 正常応答
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RegistrationTokenResponse'
   /details:
     get:
       summary: 実行詳細履歴検索
@@ -350,6 +326,8 @@ components:
           type: string
         status:
           type: string
+        conclusion:
+          type: string
         started_at:
           type: string
           format: date-time
@@ -457,18 +435,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HistoryTime'
-    RegistrationTokenRequest:
-      type: object
-      properties:
-        organization_name:
-          type: string
-        organization_key:
-          type: string
-    RegistrationTokenResponse:
-      type: object
-      properties:
-        token:
-          type: string
-        expires_at:
-          type: string
-          format: date-time
