@@ -28,3 +28,6 @@ services:
       - 8081:8081
     environment:
       PGWEB_DATABASE_URL: ${DATABASE_URL}
+secrets:
+  organization-token:
+    file: organization-token.txt
