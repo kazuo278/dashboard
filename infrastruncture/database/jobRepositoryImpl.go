@@ -56,13 +56,6 @@ func (repo *jobRepositoryImpl) GetJobById(jobId string) *github.Job {
 	return &result
 }
 
-// ID代替の複数条件によるジョブの１件取得
-func (repo *jobRepositoryImpl) GetJobByIds(repositoryId string, runId string, jobName string, runAttempt string) *github.Job {
-	result := github.Job{}
-	repo.db.Where("repository_id = ? AND run_id = ? AND job_name = ? AND run_attempt = ?", repositoryId, runId, jobName, runAttempt).Limit(1).Find(&result)
-	return &result
-}
-
 // ジョブの登録
 func (repo *jobRepositoryImpl) CreateJob(job *github.Job) *github.Job {
 	repo.db.Create(job)

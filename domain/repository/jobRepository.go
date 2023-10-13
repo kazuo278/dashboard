@@ -9,8 +9,6 @@ type JobRepository interface {
 	CreateRepository(repository *github.Repository) *github.Repository
 	// ID検索
 	GetJobById(jobId string) *github.Job
-	// ID代替の複数条件によるジョブの１件取得
-	GetJobByIds(repositoryId string, runId string, jobName string, runAttempt string) *github.Job
 	// ジョブの登録
 	CreateJob(job *github.Job) *github.Job
 	// ジョブの更新
