@@ -107,10 +107,10 @@ func (api *gitHubJobApiImpl) GetJob(jobId string, repositoryName string) (*githu
 	// 正常応答
 	if response.StatusCode == 200 {
 		// レスポンスのJSON文字列を構造体GitHubResponseにマッピング
-		result := github.Job{}
+		result := dto.GitHubJob{}
 		json.NewDecoder(response.Body).Decode(&result)
 		log.Printf("INFO: [ジョブ取得API][JobID=%s]ジョブ取得に成功しました", jobId)
-		return &result, nil
+		return convertGitHubJobToJob(result), nil
 		// エラー応答
 	} else {
 		result := dto.GitHubErrorResponse{}
@@ -199,7 +199,7 @@ func getOrganizationToken() (string, error) {
 	return organizationToken, nil
 }
 
-// dto.JobのJobIDフィールドをgitHub.Jobにコピーする
+// dto.JobリストをgitHub.Jobリストに変換する
 // ただし、以下の属性はAPIの結果に含まれないため入らない
 // ・RunAttempt
 // ・RepositoryId
@@ -207,16 +207,26 @@ func getOrganizationToken() (string, error) {
 func convertGitHubJobListToJobList(githubJobList *[]dto.GitHubJob) *[]github.Job {
 	jobList := []github.Job{}
 	for _, githubJob := range *githubJobList {
-		job := new(github.Job)
-		log.Printf("jobId= %d", githubJob.JobId)
-		job.JobId = strconv.Itoa(githubJob.JobId)
-		job.RunId = strconv.Itoa(githubJob.RunId)
-		job.JobName = githubJob.JobName
-		job.Status = strings.ToUpper(githubJob.Status)
-		job.Conclusion = strings.ToUpper(githubJob.Conclusion)
-		job.StartedAt = githubJob.StartedAt
-		job.FinishedAt = githubJob.CompletedAt
+		job := convertGitHubJobToJob(githubJob)
 		jobList = append(jobList, *job)
 	}
 	return &jobList
+}
+
+// dto.JobのJobIDフィールドをgitHub.Jobにコピーする
+// ただし、以下の属性はAPIの結果に含まれないため入らない
+// ・RunAttempt
+// ・RepositoryId
+// ・WorkflowRef
+func convertGitHubJobToJob(githubJob dto.GitHubJob) *github.Job {
+	job := new(github.Job)
+	log.Printf("jobId= %d", githubJob.JobId)
+	job.JobId = strconv.Itoa(githubJob.JobId)
+	job.RunId = strconv.Itoa(githubJob.RunId)
+	job.JobName = githubJob.JobName
+	job.Status = strings.ToUpper(githubJob.Status)
+	job.Conclusion = strings.ToUpper(githubJob.Conclusion)
+	job.StartedAt = githubJob.StartedAt
+	job.FinishedAt = githubJob.CompletedAt
+	return job
 }
