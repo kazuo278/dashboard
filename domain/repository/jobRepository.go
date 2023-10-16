@@ -1,6 +1,10 @@
 package repository
 
-import "github.com/kazuo278/dashboard/domain/model/github"
+import (
+	"time"
+
+	"github.com/kazuo278/dashboard/domain/model/github"
+)
 
 type JobRepository interface {
 	// RepositoryのID検索
@@ -9,6 +13,8 @@ type JobRepository interface {
 	CreateRepository(repository *github.Repository) *github.Repository
 	// ID検索
 	GetJobById(jobId string) *github.Job
+	// ID検索
+	GetUnfinishedJob(from time.Time, to time.Time) *github.Job
 	// ジョブの登録
 	CreateJob(job *github.Job) *github.Job
 	// ジョブの更新

@@ -18,6 +18,8 @@ func main() {
 	// アプリケーション層の初期化
 	jobApp := application.NewJobAppication(jobRepository, jobApi)
 	dashboardApp := application.NewDashboardApplication(dashboardRepository)
+	application.NewReconcileAppication(jobRepository, jobApi)
+
 	// インターフェース層の初期化
 	e := echo.New()
 	e.Use(middleware.Logger())

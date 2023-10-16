@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 	"os"
+	"time"
 
 	"database/sql"
 
@@ -72,4 +73,13 @@ func (repo *jobRepositoryImpl) UpdateJob(job *github.Job) *github.Job {
 func (repo *jobRepositoryImpl) CreateJobDetail(detail *github.JobDetail) *github.JobDetail {
 	repo.db.Save(detail)
 	return detail
+}
+
+// 未終了ジョブの取得
+func (repo *jobRepositoryImpl) GetUnfinishedJob(from time.Time, to time.Time) *github.Job {
+	result := github.Job{}
+	sql := repo.db.Where("status != ?", github.STATUS_COMPLETED)
+	sql.Where("started_at <= ?", to)
+	sql.Where("started_at >= ?", from).Limit(1).Find(&result)
+	return &result
 }
