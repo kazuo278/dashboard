@@ -168,12 +168,8 @@ let displayRedcords = (records) => {
     tdJobId.classList.add("job-id");
     // 詳細取得リンクを作成
     var aJobId = document.createElement("a");
-    var uriJobId = "https://github.com/" + record.repository_name + "/actions/runs/" + record.run_id + "/job/" + record.jobId;
-    var paramsJobId = new URLSearchParams();
-    paramsJobId.append("job_id", record.job_id);
-    paramsJobId.append("run_id", record.run_id);
-    paramsJobId.append("run_attempt", record.run_attempt);
-    aJobId.href = uriJobId + "?" + new URLSearchParams(paramsJobId).toString();
+    aJobId.href = "https://github.com/" + record.repository_name + "/actions/runs/" + record.run_id + "/job/" + record.jobId;
+    aJobId.target = '_blank';
     aJobId.text = record.job_id;
     tdJobId.appendChild(aJobId);
     tr.appendChild(tdJobId);
