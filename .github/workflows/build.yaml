@@ -2,10 +2,15 @@ name: Go package
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - "main"
+
+env:
+  BINARY_BRANCH: binary
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,3 +30,10 @@ jobs:
           path: |
             dashboard
             static-content/
+      - name: push branch
+        run: |-
+          git checkout --orphan ${{ env.BINARY_BRANCH }}
+          git add dashboard
+          git add static-content/
+          git commit -m 'update: アプリケーションを更新'
+          git push -f

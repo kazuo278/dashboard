@@ -24,7 +24,7 @@ func NewJobAppication(jobRepositroy repository.JobRepository, jobApi service.Job
 	jobApplication := new(jobApplicationImpl)
 	jobApplication.jobRepository = jobRepositroy
 	jobApplication.jobApi = jobApi
-	jobApplication.analyzer = NewAnalyzer(jobRepositroy, jobApi)
+	jobApplication.analyzer = newAnalyzer(jobRepositroy, jobApi)
 	return jobApplication
 }
 

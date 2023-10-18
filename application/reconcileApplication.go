@@ -24,7 +24,7 @@ func NewReconcileAppication(jobRepositroy repository.JobRepository, jobApi servi
 	reconcileApplication := new(reconcileApplicationImpl)
 	reconcileApplication.jobRepository = jobRepositroy
 	reconcileApplication.jobApi = jobApi
-	reconcileApplication.analyzer = NewAnalyzer(jobRepositroy, jobApi)
+	reconcileApplication.analyzer = newAnalyzer(jobRepositroy, jobApi)
 	go func() {
 		for {
 			time.Sleep(60 * time.Second)
