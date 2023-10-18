@@ -6,6 +6,9 @@ on:
     branches:
       - "main"
 
+permissions:
+  contents: write
+
 env:
   BINARY_BRANCH: binary
 
@@ -32,20 +35,30 @@ jobs:
           path: |
             dashboard
             static-content/
-      - name: push branch
+            docker/Dockerfile.local
+      - name: create branch
         run: |-
+          git config user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
           exists=$(
-            git fetch origin ${{ env.BINARY_BRANCH }} &&
+            git fetch origin ${{ env.BINARY_BRANCH }} 2> /dev/null &&
             echo true ||
             echo false
           )
-          if ! "$exists"; then
-            git switch --orphan ${{ env.BINARY_BRANCH }}
-            git commit --allow-empty -m "Initial commit"
-            git push -u origin ${{ env.BINARY_BRANCH }}
+          if "$exists"; then
+            git push origin --delete ${{ env.BINARY_BRANCH }}
           fi
-          git switch ${{ env.BINARY_BRANCH }}
+          git switch --orphan ${{ env.BINARY_BRANCH }}
+      - name: get resources
+        uses: actions/download-artifact@v3
+        with:
+          name: application
+          path: .
+      - name: push branch
+        run: |-
+          mv docker/Dockerfile.local Dockerfile
           git add dashboard
           git add static-content/
+          git add Dockerfile
           git commit -m 'update: アプリケーションを更新'
-          git push -f
+          git push -u origin ${{ env.BINARY_BRANCH }}
