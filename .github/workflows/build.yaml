@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -32,7 +34,17 @@ jobs:
             static-content/
       - name: push branch
         run: |-
-          git checkout --orphan ${{ env.BINARY_BRANCH }}
+          exists=$(
+            git fetch origin ${{ env.BINARY_BRANCH }} &&
+            echo true ||
+            echo false
+          )
+          if ! "$exists"; then
+            git switch --orphan ${{ env.BINARY_BRANCH }}
+            git commit --allow-empty -m "Initial commit"
+            git push -u origin ${{ env.BINARY_BRANCH }}
+          fi
+          git switch ${{ env.BINARY_BRANCH }}
           git add dashboard
           git add static-content/
           git commit -m 'update: アプリケーションを更新'
