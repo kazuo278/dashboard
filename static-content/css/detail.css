@@ -1,0 +1,43 @@
+.job-id {
+  min-width: 100px;
+}
+
+.run-id {
+  min-width: 100px;
+}
+
+.run-attempt {
+  min-width: 60px;
+}
+
+.repository-name {
+  min-width: 150px;
+}
+
+.job-name {
+  min-width: 100px;
+}
+
+.type {
+  min-width: 100px;
+}
+
+.using-path {
+  min-width: 120px;
+}
+
+.using-ref {
+  min-width: 100px;
+}
+
+.started-at {
+  min-width: 150px;
+}
+
+.finished-at {
+  min-width: 150px;
+}
+
+#result_table_box {
+  overflow-x: scroll !important;
+}

@@ -1,0 +1,89 @@
+.status-icon::before{
+  content: "";
+  border-radius: 9999px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  margin-right: 5px;
+}
+
+.status-icon.completed::before {
+  background-color: green;
+}
+
+.status-icon.queued::before {
+  background-color: orangered;
+  animation: flash 2s linear infinite;
+}
+
+.status-icon.in-progress::before {
+  background-color: red;
+  animation: flash 2s linear infinite;
+}
+
+#display_check .form-check {
+  min-height: unset;
+  margin-bottom: unset;
+}
+
+.job-id {
+  min-width: 100px;
+}
+
+.repository-id {
+  min-width: 100px;
+}
+
+.run-id {
+  min-width: 100px;
+}
+
+.run-attempt {
+  min-width: 60px;
+}
+
+.repository-name {
+  min-width: 150px;
+}
+
+.workflow-ref {
+  min-width: 300px;
+}
+
+.job-name {
+  min-width: 100px;
+}
+
+.status {
+  min-width: 100px;
+}
+
+.conclusion {
+  min-width: 100px;
+}
+
+.started-at {
+  min-width: 150px;
+}
+
+.finished-at {
+  min-width: 150px;
+}
+
+#result_table_box {
+  overflow-x: scroll !important;
+}
+
+@keyframes flash {
+	0%,
+  50%,
+  75%,
+	100% {
+		opacity: 1;
+	}
+
+	25% {
+		opacity: 0;
+	}
+}

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>GitHub Actions Dashboard</title>
+  <link href="css/bootstrap-5.0.2.min.css" rel="stylesheet">
+  <link href="css/common.css" rel="stylesheet">
+  <link href="css/count.css" rel="stylesheet">
+  <script src="js/bootstrap-5.0.2.bundle.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/count.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-dark bg-dark navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">GitHub Actions Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard/index.html">実行履歴検索</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard/detail.html">実行履歴詳細検索</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard/count.html">実行回数検索</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard/time.html">実行時間検索</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div id="content" class="container-fluid mt-3 px-5">
+    <p>実行回数検索</p>
+    <div id="search_box" class="p-3">
+      <p>検索条件</p>
+      <div id="search" class="row g-3 border p-3 m-3">
+        <div class="col-md-4">
+          <label for="repository_name" class="form-label">リポジトリ名</label>
+          <input id="repository_name" class="form-control" type="text" />
+        </div>
+        <div class="col-md-4">
+          <label for="started_at" class="form-label">開始期間</label>
+          <input id="started_at" class="form-control" type="date" />
+        </div>
+        <div class="col-md-4">
+          <label for="finished_at" class="form-label">終了期間</label>
+          <input id="finished_at" class="form-control" type="date" />
+        </div>
+        <div class="col-12">
+          <button id="search_button" type="submit" class="btn btn-primary">検索</button>
+        </div>
+      </div>
+    </div>
+    <div id="result_box" class="p-3">
+      <p>リポジトリごとの実行回数</p>
+      <div id="total" class="ps-3" ></div>
+      <div id="result_table_box" class="row m-3">
+        <table id="count_table">
+          <tbody id="table_body">
+            <!-- 検索結果を動的に埋め込み -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- 通知用トースト -->
+    <div id="toast" class="toast align-items-center position-fixed top-0 end-0" role="alert" aria-live="assertive"
+      aria-atomic="true">
+      <div class="d-flex">
+        <div id="toast_body" class="toast-body">
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
